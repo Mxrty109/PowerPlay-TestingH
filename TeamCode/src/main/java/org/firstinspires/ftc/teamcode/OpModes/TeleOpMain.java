@@ -113,19 +113,14 @@ public class TeleOpMain extends CommandOpMode {
             scoreSubsystem.useClaw(clawClosed ? Constants.CLAW_CLOSE : Constants.CLAW_OPEN);
         });
 
-        InstantCommand highJunction = new InstantCommand(() -> level = 3);
-        InstantCommand midJunction = new InstantCommand(() -> level = 2);
-        InstantCommand lowJunction = new InstantCommand(() -> level = 1);
-
         InstantCommand score = new InstantCommand(() -> scoreThread.start());
         InstantCommand scoreRelease = new InstantCommand(() -> scoreReleaseThread.start());
 
         new GamepadButton(driver1, GamepadKeys.Button.A).whenPressed(clawToggle);
-        new GamepadButton(driver1, GamepadKeys.Button.B).whenPressed(score);
-        new GamepadButton(driver1, GamepadKeys.Button.X).whenPressed(scoreRelease);
-        new GamepadButton(driver1, GamepadKeys.Button.DPAD_UP).whenPressed(highJunction);
-        new GamepadButton(driver1, GamepadKeys.Button.DPAD_LEFT).whenPressed(midJunction);
-        new GamepadButton(driver1, GamepadKeys.Button.DPAD_DOWN).whenPressed(lowJunction);
+        new GamepadButton(driver1, GamepadKeys.Button.B).whenPressed(new InstantCommand(() -> slideSubsystem.scoreHigh()));
+        new GamepadButton(driver1, GamepadKeys.Button.X).whenPressed(new InstantCommand(() -> slideSubsystem.scoreMid()));
+        new GamepadButton(driver1, GamepadKeys.Button.Y).whenPressed(new InstantCommand(() -> slideSubsystem.scoreLow()));
+        new GamepadButton(driver1, GamepadKeys.Button.RIGHT_BUMPER).whenPressed(scoreRelease);
         new GamepadButton(driver1, GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> slideSubsystem.resetEnc());
         driveSubsystem.setDefaultCommand(driveCommand);
         slideSubsystem.setDefaultCommand(slideManualCommand);

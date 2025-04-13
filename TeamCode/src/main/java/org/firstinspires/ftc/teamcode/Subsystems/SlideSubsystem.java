@@ -145,4 +145,14 @@ public class SlideSubsystem extends SubsystemBase {
     public double getSlideExtensionMeters() {
         return ticksToMeters(getMotorTicks());
     }
+
+    public void scoreHigh() {
+        setLevel(Constants.SLIDE_HIGH);
+    }
+    public void scoreMid() {
+        setLevel(Constants.SLIDE_MID);
+    }
+    public void scoreLow() {
+        setLevel(Constants.SLIDE_LOW);
+    }
 }

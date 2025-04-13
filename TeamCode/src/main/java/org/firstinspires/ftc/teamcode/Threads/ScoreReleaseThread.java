@@ -27,6 +27,7 @@ public class ScoreReleaseThread extends Thread {
             throw new RuntimeException(e);
         }
         scoreSubsystem.useRotate(Constants.ROTATE_INTAKE);
+        scoreSubsystem.useArm(Constants.ARM_INTAKE);
         slideSubsystem.setLevel(0);
     }
 

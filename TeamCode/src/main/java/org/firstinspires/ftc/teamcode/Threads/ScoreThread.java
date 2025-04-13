@@ -17,7 +17,6 @@ public class ScoreThread extends Thread {
     public ScoreThread(SlideSubsystem slideSubsystem, ScoreSubsystem scoreSubsystem) {
         this.slideSubsystem = slideSubsystem;
         this.scoreSubsystem = scoreSubsystem;
-        this.level = level;
 
         this.setPriority(MIN_PRIORITY);
         this.setDaemon(true);
