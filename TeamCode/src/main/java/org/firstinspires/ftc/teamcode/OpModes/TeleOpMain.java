@@ -117,9 +117,9 @@ public class TeleOpMain extends CommandOpMode {
         InstantCommand scoreRelease = new InstantCommand(() -> scoreReleaseThread.start());
 
         new GamepadButton(driver1, GamepadKeys.Button.A).whenPressed(clawToggle);
-        new GamepadButton(driver1, GamepadKeys.Button.B).whenPressed(new InstantCommand(() -> slideSubsystem.scoreHigh()));
-        new GamepadButton(driver1, GamepadKeys.Button.X).whenPressed(new InstantCommand(() -> slideSubsystem.scoreMid()));
-        new GamepadButton(driver1, GamepadKeys.Button.Y).whenPressed(new InstantCommand(() -> slideSubsystem.scoreLow()));
+        new GamepadButton(driver1, GamepadKeys.Button.B).whenPressed(new InstantCommand(() -> slideSubsystem.scoreHigh())); // Goes to High Junction
+        new GamepadButton(driver1, GamepadKeys.Button.X).whenPressed(new InstantCommand(() -> slideSubsystem.scoreMid())); // Goes to Mid Junction
+        new GamepadButton(driver1, GamepadKeys.Button.Y).whenPressed(new InstantCommand(() -> slideSubsystem.scoreLow())); // Goes to Low Junction
         new GamepadButton(driver1, GamepadKeys.Button.RIGHT_BUMPER).whenPressed(scoreRelease);
         new GamepadButton(driver1, GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> slideSubsystem.resetEnc());
         driveSubsystem.setDefaultCommand(driveCommand);

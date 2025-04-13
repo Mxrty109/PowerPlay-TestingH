@@ -148,11 +148,11 @@ public class SlideSubsystem extends SubsystemBase {
 
     public void scoreHigh() {
         setLevel(Constants.SLIDE_HIGH);
-    }
+    } // Sets slide level to High Junction
     public void scoreMid() {
         setLevel(Constants.SLIDE_MID);
-    }
+    } // Sets slide level to Mid Junction
     public void scoreLow() {
         setLevel(Constants.SLIDE_LOW);
-    }
+    } // Sets slide level to Low Junction
 }
