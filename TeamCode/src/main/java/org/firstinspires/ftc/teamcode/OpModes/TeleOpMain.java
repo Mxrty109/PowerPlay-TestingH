@@ -52,7 +52,7 @@ public class TeleOpMain extends CommandOpMode {
 
     private GamepadEx driver1;
 
-    private Consumer<Double> scoreThreadExecutor;
+    private Consumer scoreThreadExecutor;
 
     private InstantCommand scoring;
     private InstantCommand scoreRelease;
@@ -60,6 +60,7 @@ public class TeleOpMain extends CommandOpMode {
     private InstantCommand highJunction;
     private InstantCommand midJunction;
     private InstantCommand lowJunction;
+    public int slideLevel;
 
     private int level = 2;
     private boolean clawClosed = false;
@@ -93,19 +94,20 @@ public class TeleOpMain extends CommandOpMode {
         slideManualCommand = new SlideManualCommand(slideSubsystem, () -> driver1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER), () -> driver1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 
         intakeThread = new IntakeThread(scoreSubsystem);
-        scoreThread = new ScoreThread(slideSubsystem, scoreSubsystem);
+        scoreThread = new ScoreThread(slideSubsystem, scoreSubsystem, slideLevel);
         scoreReleaseThread = new ScoreReleaseThread(slideSubsystem, scoreSubsystem);
 
-        intakeThread.setPriority(Thread.MIN_PRIORITY);
-        outtakeThread.setPriority(Thread.MIN_PRIORITY);
         scoreThread.setPriority(Thread.MIN_PRIORITY);
         scoreReleaseThread.setPriority(Thread.MIN_PRIORITY);
         Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
-        scoreThreadExecutor = (Double levelForSlides) -> {
-            scoreThread.slideLevel = levelForSlides;
-            scoreThread.interrupt();
-            scoreThread.start();
+        scoreThreadExecutor = (levelForSlides) -> {
+            ScoreThread thread = new ScoreThread(slideSubsystem, scoreSubsystem, slideLevel);
+            thread.slideLevel = (int) levelForSlides;
+            thread.start();
+//            scoreThread.slideLevel = (int) levelForSlides;
+//            scoreThread.interrupt();
+//            scoreThread.start();
         };
 
         InstantCommand clawToggle = new InstantCommand(() -> {
@@ -114,12 +116,21 @@ public class TeleOpMain extends CommandOpMode {
         });
 
         InstantCommand score = new InstantCommand(() -> scoreThread.start());
-        InstantCommand scoreRelease = new InstantCommand(() -> scoreReleaseThread.start());
+
+        InstantCommand scoreRelease = new InstantCommand(() -> {
+            new ScoreReleaseThread(slideSubsystem, scoreSubsystem).start();
+        });
+        InstantCommand scoreTest = new InstantCommand(() -> {
+            scoreThreadExecutor.accept(Constants.SLIDE_HIGH);
+        });
+
+//        InstantCommand scoreTest = new InstantCommand(() -> scoreThreadExecutor.accept(Constants.SLIDE_HIGH));
+//        InstantCommand scoreRelease = new InstantCommand(() -> scoreReleaseThread.start());
 
         new GamepadButton(driver1, GamepadKeys.Button.A).whenPressed(clawToggle);
-        new GamepadButton(driver1, GamepadKeys.Button.B).whenPressed(new InstantCommand(() -> slideSubsystem.scoreHigh())); // Goes to High Junction
-        new GamepadButton(driver1, GamepadKeys.Button.X).whenPressed(new InstantCommand(() -> slideSubsystem.scoreMid())); // Goes to Mid Junction
-        new GamepadButton(driver1, GamepadKeys.Button.Y).whenPressed(new InstantCommand(() -> slideSubsystem.scoreLow())); // Goes to Low Junction
+        new GamepadButton(driver1, GamepadKeys.Button.B).whenPressed(scoreTest); // Goes to High Junction
+        new GamepadButton(driver1, GamepadKeys.Button.X).whenPressed(new InstantCommand(() -> scoreThreadExecutor.accept(Constants.SLIDE_MID))); // Goes to Mid Junction
+        new GamepadButton(driver1, GamepadKeys.Button.Y).whenPressed(new InstantCommand(() -> slideSubsystem.setLevel(Constants.SLIDE_LOW))); // Goes to Low Junction
         new GamepadButton(driver1, GamepadKeys.Button.RIGHT_BUMPER).whenPressed(scoreRelease);
         new GamepadButton(driver1, GamepadKeys.Button.DPAD_RIGHT).whenPressed(() -> slideSubsystem.resetEnc());
         driveSubsystem.setDefaultCommand(driveCommand);
