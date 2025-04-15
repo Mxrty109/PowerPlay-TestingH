@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Subsystems.SlideSubsystem;
 public class ScoreReleaseThread extends Thread {
     SlideSubsystem slideSubsystem;
     ScoreSubsystem scoreSubsystem;
+    public int slideLevel;
 
     public ScoreReleaseThread(SlideSubsystem slideSubsystem, ScoreSubsystem scoreSubsystem) {
         this.slideSubsystem = slideSubsystem;
@@ -26,9 +27,15 @@ public class ScoreReleaseThread extends Thread {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        scoreSubsystem.useRotate(Constants.ROTATE_INTAKE);
+
         scoreSubsystem.useArm(Constants.ARM_INTAKE);
-        slideSubsystem.setLevel(0);
+        try {
+            sleep(250);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        slideSubsystem.setLevelTicks(0);
     }
 
     public void interrupt() {
