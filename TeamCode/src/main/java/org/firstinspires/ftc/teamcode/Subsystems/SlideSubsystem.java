@@ -146,13 +146,20 @@ public class SlideSubsystem extends SubsystemBase {
         return ticksToMeters(getMotorTicks());
     }
 
-    public void scoreHigh() {
-        setLevel(Constants.SLIDE_HIGH);
-    } // Sets slide level to High Junction
-    public void scoreMid() {
-        setLevel(Constants.SLIDE_MID);
-    } // Sets slide level to Mid Junction
-    public void scoreLow() {
-        setLevel(Constants.SLIDE_LOW);
-    } // Sets slide level to Low Junction
+    public void setLevelTicks(int ticks) {
+        double meters = ticksToMeters(ticks);
+        setLevel(meters);  // reutilizezi metoda existentă
+    }
+
+
+//    public void scoreHigh() {
+//        setLevel(Constants.SLIDE_HIGH);
+//
+//    } // Sets slide level to High Junction
+//    public void scoreMid() {
+//        setLevel(Constants.SLIDE_MID);
+//    } // Sets slide level to Mid Junction
+//    public void scoreLow() {
+//        setLevel(Constants.SLIDE_LOW);
+//    } // Sets slide level to Low Junction
 }
